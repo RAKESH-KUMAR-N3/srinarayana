@@ -55,22 +55,71 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Mobile Menu Toggle
+    // Mobile Menu Toggle with Overlay
     const menuToggle = document.querySelector('.menu-toggle');
     const navLinks = document.querySelector('.nav-links');
 
+    // Create overlay element
+    const overlay = document.createElement('div');
+    overlay.id = 'nav-overlay';
+    overlay.style.cssText = `
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 9500;
+        transition: opacity 0.3s ease;
+    `;
+    document.body.appendChild(overlay);
+
+    // Add close (X) button inside nav panel
+    const closeBtn = document.createElement('button');
+    closeBtn.innerHTML = '&times;';
+    closeBtn.setAttribute('aria-label', 'Close menu');
+    closeBtn.style.cssText = `
+        position: absolute;
+        top: 18px;
+        right: 20px;
+        background: none;
+        border: none;
+        color: white;
+        font-size: 2rem;
+        line-height: 1;
+        cursor: pointer;
+        z-index: 9700;
+        padding: 4px 10px;
+    `;
+    if (navLinks) {
+        navLinks.style.position = 'fixed';
+        navLinks.appendChild(closeBtn);
+    }
+    closeBtn.addEventListener('click', closeMenu);
+
+    function openMenu() {
+        navLinks.classList.add('active');
+        menuToggle.classList.add('active');
+        overlay.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeMenu() {
+        navLinks.classList.remove('active');
+        menuToggle.classList.remove('active');
+        overlay.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+
     if (menuToggle && navLinks) {
         menuToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-            menuToggle.classList.toggle('active');
+            navLinks.classList.contains('active') ? closeMenu() : openMenu();
         });
+
+        // Close menu when clicking overlay
+        overlay.addEventListener('click', closeMenu);
 
         // Close menu when clicking a link
         navLinks.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-                menuToggle.classList.remove('active');
-            });
+            link.addEventListener('click', closeMenu);
         });
     }
 
