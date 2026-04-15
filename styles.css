@@ -98,13 +98,15 @@ header {
 
 .main-header {
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
-    max-width: 1300px;
+    flex-wrap: wrap;
+    gap: 1rem;
+    max-width: 1400px;
+    /* Increased for more room */
     margin: 0 auto;
-    padding: 0.5rem 2rem;
-    height: 90px;
-    gap: 4rem;
+    padding: 0 2rem;
+    min-height: 100px;
 }
 
 .header-left {
@@ -143,6 +145,11 @@ header {
 nav {
     display: flex;
     align-items: center;
+    flex: 1;
+    /* Take all available middle space */
+    justify-content: flex-end;
+    /* Push links to the right */
+    min-width: 0;
 }
 
 .logo a {
@@ -155,8 +162,10 @@ nav {
 
 .logo img {
     height: 70px;
+    /* Fixed height for clean alignment */
     width: auto;
     margin: 0;
+    display: block;
     transition: var(--transition);
 }
 
@@ -168,24 +177,44 @@ nav {
 .nav-links {
     display: flex;
     list-style: none;
-    gap: 2rem;
-    /* Increased gap for neatness */
+    gap: 1.5rem;
+    position: relative;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    width: auto;
+    min-width: 0;
+}
+
+.nav-links li {
+    flex: 0 0 auto;
+    white-space: nowrap;
 }
 
 .nav-links a {
     text-decoration: none;
-    color: var(--text-dark);
+    color: var(--primary-blue);
+    /* High contrast blue */
     font-weight: 700;
     text-transform: uppercase;
     font-size: 0.75rem;
-    /* Reduced font size for buttons */
+    /* Compact size to ensure all items fit */
     transition: var(--transition);
-    padding: 0.5rem 0;
+    padding: 10px 0;
+    white-space: nowrap !important;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    flex-shrink: 0;
 }
 
 .nav-links a:hover,
 .nav-links a.active {
-    color: var(--accent-green);
+    color: var(--accent-orange);
 }
 
 /* Dropdown Menu Styles */
@@ -255,7 +284,8 @@ nav {
     position: fixed;
     right: 15px;
     top: 20px;
-    z-index: 2500;
+    z-index: 10001;
+    /* Must be higher than nav-links (9999) */
 }
 
 .menu-toggle.active span {
@@ -279,10 +309,32 @@ nav {
 /* Sticky Header Modifier */
 header.sticky {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
 }
 
 header.sticky .main-header {
-    height: 65px !important;
+    min-height: 70px !important;
+    height: 70px !important;
+    padding: 0 1.5rem !important;
+    align-items: center !important;
+}
+
+header.sticky nav {
+    min-width: 0 !important;
+}
+
+header.sticky .nav-links {
+    align-items: center;
+    min-height: 100%;
+    flex-wrap: nowrap;
+}
+
+header.sticky .nav-links a {
+    padding: 7px 0 !important;
 }
 
 header.sticky .logo img {
@@ -327,12 +379,14 @@ section {
     position: relative;
     width: 100% !important;
     max-width: none !important;
-    height: 400px; /* Fixed height for internal page heroes */
+    height: 400px;
+    /* Fixed height for internal page heroes */
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--primary-blue); /* Fallback color */
+    background-color: var(--primary-blue);
+    /* Fallback color */
 }
 
 .page-hero .banner-img {
@@ -343,12 +397,14 @@ section {
     height: 100%;
     object-fit: cover;
     z-index: 0;
-    filter: brightness(0.5); /* Darken directly if needed */
+    filter: brightness(0.5);
+    /* Darken directly if needed */
 }
 
 .page-hero .hero-content {
     position: relative;
-    z-index: 2; /* Sit above the overlay */
+    z-index: 2;
+    /* Sit above the overlay */
     text-align: center;
     padding: 20px;
     width: 100%;
@@ -361,7 +417,8 @@ section {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 45, 98, 0.7); /* Slightly transparent overlay */
+    background: rgba(0, 45, 98, 0.7);
+    /* Slightly transparent overlay */
     z-index: 1;
 }
 
@@ -1239,19 +1296,23 @@ footer::before {
     border: 1px solid #f1f5f9;
 }
 
-/* --- Global Mobile Optimization --- */
-
-
-/* FIX: Closed missing media query bracket */
+/* --- Global Mobile Optimization Reset --- */
+@media (max-width: 1200px) {
+    .nav-links {
+        display: none;
+        /* Default hidden on mobile until active */
+    }
+}
 
 /* ============================================
    MOBILE RESPONSIVE - COMPLETE OVERHAUL
-   Target: All screens <= 992px
+   Target: All screens <= 1200px
    ============================================ */
-@media (max-width: 992px) {
+@media (max-width: 1200px) {
 
     /* ---- Global Reset ---- */
-    html, body {
+    html,
+    body {
         width: 100% !important;
         max-width: 100% !important;
         overflow-x: clip !important;
@@ -1261,25 +1322,34 @@ footer::before {
     .main-header {
         width: 100% !important;
         display: flex !important;
-        align-items: center !important;
         justify-content: space-between !important;
-        padding: 0 12px !important;
-        gap: 8px !important;
-        height: 56px !important;
-        min-height: 56px !important;
-        max-height: 56px !important;
-        overflow: hidden !important;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+        padding: 0 5px 0 0 !important;
+        /* Removed all left padding */
+        gap: 5px !important;
+        min-height: 65px !important;
+        overflow: visible !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
         max-width: 100% !important;
     }
 
     .header-left {
-        display: flex;
-        align-items: center;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
         order: 1;
-        flex: 0 0 auto;
-        overflow: hidden;
-        max-width: 160px;
+        flex: 1 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
+        /* allow negative margin to show */
+    }
+
+    .logo {
+        margin: 0 !important;
+        padding: 0 !important;
+        display: flex !important;
+        justify-content: flex-start !important;
+        width: auto !important;
     }
 
     .logo img {
@@ -1287,7 +1357,10 @@ footer::before {
         width: auto !important;
         max-width: 150px !important;
         object-fit: contain !important;
+        object-position: left center !important;
         margin: 0 !important;
+        margin-left: -35px !important;
+        /* Large negative margin to pull the actual graphic to the edge */
     }
 
     /* JOIN NOW button */
@@ -1331,65 +1404,76 @@ footer::before {
 
     /* ---- Mobile Nav Drawer ---- */
     .nav-links {
-        display: flex !important;
+        display: none;
+        /* Initially hidden, toggled by JS */
         position: fixed;
         top: 0;
         right: -100%;
         width: 80%;
-        max-width: 320px;
+        max-width: 300px;
         height: 100vh;
         background: linear-gradient(160deg, #0f2a5e 0%, #1a3d7c 100%);
         flex-direction: column;
-        padding: 70px 0 30px;
-        box-shadow: -5px 0 30px rgba(0,0,0,0.5);
-        transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-        z-index: 9600;
+        justify-content: flex-start !important;
+        /* Forces items to top! */
+        padding: 80px 0 40px;
+        box-shadow: -5px 0 25px rgba(0, 0, 0, 0.4);
+        transition: right 0.3s ease-in-out;
+        z-index: 9999;
         overflow-y: auto;
         list-style: none;
         gap: 0;
     }
 
-    .nav-links.active { right: 0; }
+    .nav-links.active {
+        display: flex !important;
+        right: 0;
+    }
 
     .nav-links li {
         width: 100%;
-        margin: 0;
-        border-bottom: 1px solid rgba(255,255,255,0.08);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        height: auto !important;
+        position: relative;
+        display: block !important;
+        flex: none !important;
     }
 
     .nav-links a {
-        font-size: 0.85rem !important;
-        font-weight: 700;
-        padding: 14px 20px !important;
-        color: #e2e8f0 !important;
+        font-size: 0.9rem !important;
+        color: #fff !important;
+        padding: 15px 25px !important;
         display: block !important;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-        transition: background 0.2s;
-        border-bottom: none !important;
-        position: relative;
+        width: 100%;
+        text-align: left;
+        height: auto !important;
+        line-height: 1.5 !important;
     }
 
-    .nav-links a:hover, .nav-links a.active {
+    .nav-links a:hover {
+        background: rgba(255, 255, 255, 0.1);
         color: var(--accent-orange) !important;
-        background: rgba(255,255,255,0.05);
     }
 
     .dropdown-content {
         position: static !important;
-        display: block !important;
+        display: none !important;
         box-shadow: none !important;
-        background: rgba(0,0,0,0.3) !important;
-        padding-left: 0 !important;
+        background: rgba(0, 0, 0, 0.15) !important;
+        padding-left: 1rem !important;
         margin: 0 !important;
-        border-left: 4px solid var(--accent-orange) !important;
+        border-left: none !important;
+    }
+
+    .dropdown.open .dropdown-content {
+        display: block !important;
     }
 
     .dropdown-content a {
         font-size: 0.8rem !important;
-        padding: 10px 32px !important;
-        color: #cbd5e1 !important;
-        border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+        padding: 12px 25px !important;
+        color: #e2e8f0 !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03) !important;
         text-transform: none !important;
         font-weight: 500;
         letter-spacing: 0;
@@ -1399,13 +1483,23 @@ footer::before {
         border-bottom: none !important;
     }
 
-    .dropdown > a::after {
+    .dropdown>a {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+    }
+
+    .dropdown>a::after {
         content: '\f107' !important;
         font-family: 'Font Awesome 6 Free';
         font-weight: 900;
         float: right;
-        font-size: 0.8rem;
-        margin-top: 2px;
+        font-size: 0.9rem;
+        transition: transform 0.3s ease;
+    }
+
+    .dropdown.open>a::after {
+        transform: rotate(180deg);
     }
 
     /* ---- Hero Banners (full width) ---- */
@@ -1433,8 +1527,13 @@ footer::before {
         object-fit: contain !important;
     }
 
-    .page-hero .hero-content h1 { font-size: 1.5rem !important; }
-    .page-hero .hero-content p  { font-size: 0.85rem !important; }
+    .page-hero .hero-content h1 {
+        font-size: 1.5rem !important;
+    }
+
+    .page-hero .hero-content p {
+        font-size: 0.85rem !important;
+    }
 
     /* ---- Sections (general) ---- */
     section {
@@ -1463,17 +1562,33 @@ footer::before {
         margin: 1.5rem 10px !important;
         padding: 1.5rem !important;
     }
-    
+
     .course-success-section,
     .techniques-section {
         padding: 30px 15px !important;
     }
 
     /* ---- Headings & Extracted Typography ---- */
-    h1 { font-size: 1.4rem !important; line-height: 1.2 !important; word-break: break-word !important; }
-    h2 { font-size: 1.15rem !important; word-break: break-word !important; }
-    h3 { font-size: 1rem !important; margin-bottom: 0.5rem !important; }
-    p  { font-size: 0.85rem !important; line-height: 1.5 !important; }
+    h1 {
+        font-size: 1.4rem !important;
+        line-height: 1.2 !important;
+        word-break: break-word !important;
+    }
+
+    h2 {
+        font-size: 1.15rem !important;
+        word-break: break-word !important;
+    }
+
+    h3 {
+        font-size: 1rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    p {
+        font-size: 0.85rem !important;
+        line-height: 1.5 !important;
+    }
 
     .section-title {
         margin-bottom: 1.2rem !important;
@@ -1508,7 +1623,7 @@ footer::before {
         flex-wrap: nowrap !important;
     }
 
-    .contact-info-footer > div {
+    .contact-info-footer>div {
         flex: 1 1 0 !important;
         min-width: 0 !important;
         text-align: center !important;
@@ -1573,7 +1688,7 @@ footer::before {
         margin-bottom: 0.3rem !important;
         font-size: 0.95rem !important;
     }
-    
+
     .footer-section ul li {
         margin-bottom: 0.2rem !important;
     }
@@ -1583,13 +1698,16 @@ footer::before {
         gap: 0.5rem !important;
         padding: 0 15px !important;
     }
-    
+
     .footer-section:first-child,
     .footer-section:last-child {
         grid-column: span 1;
     }
 
-    .footer-logo img { width: 120px !important; margin-bottom: 0.5rem !important; }
+    .footer-logo img {
+        width: 120px !important;
+        margin-bottom: 0.5rem !important;
+    }
 
     .footer-bottom {
         padding: 1rem 15px !important;
@@ -1605,7 +1723,8 @@ footer::before {
         box-sizing: border-box !important;
     }
 
-    .blog-hero-left, .blog-hero-right {
+    .blog-hero-left,
+    .blog-hero-right {
         width: 100% !important;
         max-width: 100% !important;
         padding: 25px 15px !important;
@@ -1676,7 +1795,7 @@ footer::before {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
     z-index: 9000;
     padding-bottom: env(safe-area-inset-bottom);
 }
@@ -1693,7 +1812,9 @@ footer::before {
     transition: var(--transition);
 }
 
-.bottom-nav-item i    { font-size: 1.1rem; }
+.bottom-nav-item i {
+    font-size: 1.1rem;
+}
 
 .bottom-nav-item span {
     font-size: 0.6rem;
@@ -1702,10 +1823,13 @@ footer::before {
     text-align: center;
 }
 
-.bottom-nav-item:active { background: rgba(255,255,255,0.1); }
-
-/* Hide bottom nav on desktop */
-@media (min-width: 993px) {
-    .bottom-nav { display: none !important; }
+.bottom-nav-item:active {
+    background: rgba(255, 255, 255, 0.1);
 }
 
+/* Hide bottom nav on desktop */
+@media (min-width: 1201px) {
+    .bottom-nav {
+        display: none !important;
+    }
+}

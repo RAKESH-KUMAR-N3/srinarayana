@@ -70,30 +70,12 @@ document.addEventListener('DOMContentLoaded', () => {
         z-index: 9500;
         transition: opacity 0.3s ease;
     `;
-    document.body.appendChild(overlay);
-
-    // Add close (X) button inside nav panel
-    const closeBtn = document.createElement('button');
-    closeBtn.innerHTML = '&times;';
-    closeBtn.setAttribute('aria-label', 'Close menu');
-    closeBtn.style.cssText = `
-        position: absolute;
-        top: 18px;
-        right: 20px;
-        background: none;
-        border: none;
-        color: white;
-        font-size: 2rem;
-        line-height: 1;
-        cursor: pointer;
-        z-index: 9700;
-        padding: 4px 10px;
-    `;
-    if (navLinks) {
-        navLinks.style.position = 'fixed';
-        navLinks.appendChild(closeBtn);
+    const headerEl = document.querySelector('header');
+    if (headerEl) {
+        headerEl.appendChild(overlay);
+    } else {
+        document.body.appendChild(overlay);
     }
-    closeBtn.addEventListener('click', closeMenu);
 
     function openMenu() {
         navLinks.classList.add('active');
@@ -117,9 +99,25 @@ document.addEventListener('DOMContentLoaded', () => {
         // Close menu when clicking overlay
         overlay.addEventListener('click', closeMenu);
 
-        // Close menu when clicking a link
-        navLinks.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', closeMenu);
+        // Event delegation for mobile menu link clicks and accordion
+        navLinks.addEventListener('click', (e) => {
+            if (window.innerWidth > 1200) return; // Only process custom clicks on mobile
+            
+            // Find the closest 'a' tag to the click
+            const link = e.target.closest('a');
+            if (!link) return; // If didn't click on a link, ignore
+            
+            const li = link.closest('li');
+            
+            // Is this a dropdown toggle?
+            if (li && li.classList.contains('dropdown') && link.parentElement === li) {
+                e.preventDefault();
+                e.stopPropagation();
+                li.classList.toggle('open');
+            } else {
+                // Else, it's a real link, so close the menu
+                closeMenu();
+            }
         });
     }
 
@@ -135,9 +133,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Navigation Active Link Highlighting
     const currentPath = window.location.pathname.split('/').pop() || 'index.html';
-    document.querySelectorAll('.nav-links a').forEach(link => {
-        if (link.getAttribute('href') === currentPath) {
+    const navAnchors = document.querySelectorAll('.nav-links a');
+    let activeFound = false;
+
+    navAnchors.forEach(link => link.classList.remove('active'));
+
+    navAnchors.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href === currentPath || (currentPath === 'index.html' && href === 'index.html')) {
             link.classList.add('active');
+            activeFound = true;
+
+            const dropdownContent = link.closest('.dropdown-content');
+            if (dropdownContent) {
+                const parentToggle = dropdownContent.previousElementSibling;
+                if (parentToggle && parentToggle.tagName === 'A') {
+                    parentToggle.classList.add('active');
+                }
+            }
         }
     });
+
+    if (!activeFound) {
+        const homeLink = Array.from(navAnchors).find(link => link.getAttribute('href') === 'index.html');
+        if (homeLink) {
+            homeLink.classList.add('active');
+        }
+    }
 });
