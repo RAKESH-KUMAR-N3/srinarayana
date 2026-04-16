@@ -1,0 +1,77 @@
+/* about.html - About Page Specific Styles */
+/* Add about-page-only overrides here */
+
+
+/* ── Methodology Card ── */
+.methodology-card {
+    position: relative;
+    max-width: 850px;
+    margin: 4rem auto;
+    padding: 3.5rem;
+    background: #ffffff;
+    box-shadow: 0 30px 60px -12px rgba(0, 45, 98, 0.15), 0 18px 36px -18px rgba(0, 0, 0, 0.2);
+    border: 1px solid #f1f5f9;
+    line-height: 1.8;
+}
+
+.methodology-card ul {
+    margin: 2rem 0 0 0;
+    padding-left: 1.5rem;
+    list-style: none;
+}
+
+.methodology-card ul li {
+    margin-bottom: 1.2rem;
+    position: relative;
+    color: #475569;
+}
+
+.methodology-card ul li::before {
+    content: '\f058';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    left: -1.7rem;
+    color: var(--accent-orange);
+}
+
+.methodology-card::before {
+    content: '';
+    position: absolute;
+    top: -12px;
+    left: -12px;
+    width: 60px;
+    height: 60px;
+    border-top: 10px solid var(--accent-orange);
+    border-left: 10px solid var(--accent-orange);
+    z-index: 1;
+}
+
+.methodology-card::after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    right: -12px;
+    width: 60px;
+    height: 60px;
+    border-bottom: 10px solid var(--primary-blue);
+    border-right: 10px solid var(--primary-blue);
+    z-index: 1;
+}
+
+
+/* ── About Mobile Responsive ── */
+@media (max-width: 768px) {
+    .methodology-card {
+        padding: 2rem;
+        margin: 2rem 1rem;
+    }
+
+    .methodology-card::before,
+    .methodology-card::after {
+        width: 40px;
+        height: 40px;
+        border-width: 6px;
+    }
+
+}
